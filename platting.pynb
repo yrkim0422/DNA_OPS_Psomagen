@@ -1,551 +1,222 @@
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Initialization\n",
-    "\n",
-    "### ssss"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 1,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/Users/yeryoungkim/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:40: DeprecationWarning: use driver.switch_to.frame instead\n"
-     ]
-    }
-   ],
-   "source": [
-    "#imports\n",
-    "from selenium import webdriver\n",
-    "from selenium.webdriver.common.keys import Keys\n",
-    "from selenium.webdriver.support.ui import WebDriverWait\n",
-    "from bs4 import BeautifulSoup\n",
-    "import urllib.request\n",
-    "import re\n",
-    "import os\n",
-    "import numpy as np\n",
-    "import pandas as pd\n",
-    "import time\n",
-    "from itertools import zip_longest\n",
-    "from selenium.common.exceptions import ElementClickInterceptedException\n",
-    "import time\n",
-    "\n",
-    "# panda configuration\n",
-    "pd.set_option('display.max_rows', 1000) # max number of rows to display\n",
-    "\n",
-    "start_time = time.time()\n",
-    "# First start the chromedriver\n",
-    "\n",
-    "path_to_chromedriver ='/Users/yeryoungkim/Desktop/chromedriver' \n",
-    "\n",
-    "browser = webdriver.Chrome(executable_path = path_to_chromedriver)\n",
-    "# Set the url\n",
-    "url = 'http://macrogenusa.com/admin/'\n",
-    "browser.get(url)\n",
-    "\n",
-    "\n",
-    "# find the 'user_id' element by name\n",
-    "browser.find_element_by_name('user_id')\n",
-    "browser.find_element_by_name('user_id').clear() # Make sure that the form is empty\n",
-    "browser.find_element_by_name('user_id').send_keys('yrkim') # writing ID \n",
-    "browser.find_element_by_name('passwd') # find the 'passwd' element by name\n",
-    "browser.find_element_by_name('passwd').clear()# Make sure that the form is empty\n",
-    "browser.find_element_by_name('passwd').send_keys('macrogen0605')# writing password\n",
-    "browser.find_element_by_xpath('/html/body/div/div/form/button').click()# Searching the login button's xpath and click it.\n",
-    "\n",
-    "# switch to frame in menu\n",
-    "browser.switch_to_frame('menu')\n",
-    "browser.find_element_by_xpath('//*[@id=\"leftmenu\"]/ul/li[4]/ul/li[15]/a').click()# click the quantify button\n",
-    "\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# # switch to frame in main\n",
-    "# browser.switch_to_default_content()\n",
-    "# browser.switch_to_frame('main')\n",
-    "# time.sleep(2)\n",
-    "# btn_found = True\n",
-    "# cnt = 0\n",
-    "# max_cnt = 600 # maximum count for checking the buttons.\n",
-    "# time.sleep(1) # wait until the frame has been updated.\n",
-    "# while (btn_found == True):\n",
-    "#     # wait until 'select' button is disappeared\n",
-    "#     select_button = browser.find_elements_by_xpath(\"//*[@onclick]\")\n",
-    "#     btn_found = False\n",
-    "#     print('trial: %d / %d' %(cnt, max_cnt))\n",
-    "#     for ii in select_button: # iterate over all the buttons\n",
-    "#         _onclick = ii.get_attribute('onclick') # get attribute \"onclick\"\n",
-    "# #         print(_onclick)\n",
-    "#         if _onclick == \"workFn()\": #if \"onclick\" is not nextFn()\n",
-    "#             btn_found = True\n",
-    "#             print('repeat')\n",
-    "#     time.sleep (1) # sleep for 1 seconds.\n",
-    "#     cnt = cnt + 1\n",
-    "#     if (cnt > max_cnt):\n",
-    "#         print('fail!')\n",
-    "        "
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Web scrapping\n",
-    "\n",
-    "### sss\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "/Users/yeryoungkim/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:1: DeprecationWarning: use driver.switch_to.default_content instead\n",
-      "  \"\"\"Entry point for launching an IPython kernel.\n",
-      "/Users/yeryoungkim/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:2: DeprecationWarning: use driver.switch_to.frame instead\n",
-      "  \n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Web scraping finished!\n",
-      "[     0               1       2                               3  \\\n",
-      "0    #             의뢰인    수주특기                  Name of Sample   \n",
-      "1    1  Macrogen MA QC  mgmaqc  (F1)PL-022515-23523F_job241628   \n",
-      "2    2  Macrogen MA QC  mgmaqc  (G1)PL-022515-23523G_job241629   \n",
-      "3    3  Macrogen MA QC  mgmaqc  (H1)PL-022515-23523H_job241630   \n",
-      "4    4  Macrogen MA QC  mgmaqc  (A2)PL-022515-23523I_job241631   \n",
-      "5    5  Macrogen MA QC  mgmaqc  (B2)PL-022515-23523J_job241632   \n",
-      "6    6  Macrogen MA QC  mgmaqc  (C2)PL-022515-23523K_job241633   \n",
-      "7    7  Macrogen MA QC  mgmaqc  (D2)PL-022515-23523L_job241634   \n",
-      "8    8  Macrogen MA QC  mgmaqc  (E2)PL-022515-23523M_job241635   \n",
-      "9    9  Macrogen MA QC  mgmaqc  (F2)PL-022515-23523N_job241636   \n",
-      "10  10  Macrogen MA QC  mgmaqc  (G2)PL-022515-23523O_job241637   \n",
-      "11  11  Macrogen MA QC  mgmaqc  (H2)PL-022515-23523P_job241638   \n",
-      "12  12  Macrogen MA QC  mgmaqc  (A5)PL-022396-23554A_job241655   \n",
-      "13  13  Macrogen MA QC  mgmaqc  (B5)PL-022396-23554B_job241656   \n",
-      "14  14  Macrogen MA QC  mgmaqc  (C5)PL-022396-23554C_job241657   \n",
-      "15  15  Macrogen MA QC  mgmaqc  (D5)PL-022396-23554D_job241658   \n",
-      "16  16  Macrogen MA QC  mgmaqc  (E5)PL-022396-23554E_job241659   \n",
-      "17  17  Macrogen MA QC  mgmaqc  (F5)PL-022396-23554F_job241660   \n",
-      "18  18  Macrogen MA QC  mgmaqc  (G5)PL-022396-23554G_job241661   \n",
-      "19  19  Macrogen MA QC  mgmaqc  (H5)PL-022396-23554H_job241662   \n",
-      "20  20  Macrogen MA QC  mgmaqc  (A6)PL-022396-23554I_job241663   \n",
-      "21  21  Macrogen MA QC  mgmaqc  (B6)PL-022396-23554J_job241664   \n",
-      "22  22  Macrogen MA QC  mgmaqc  (C6)PL-022396-23554K_job241665   \n",
-      "23  23  Macrogen MA QC  mgmaqc  (D6)PL-022396-23554L_job241666   \n",
-      "24  24  Macrogen MA QC  mgmaqc  (E6)PL-022396-23554M_job241667   \n",
-      "25  25  Macrogen MA QC  mgmaqc  (F6)PL-022396-23554N_job241668   \n",
-      "26  26  Macrogen MA QC  mgmaqc  (G6)PL-022396-23554O_job241669   \n",
-      "27  27  Macrogen MA QC  mgmaqc  (H6)PL-022396-23554P_job241670   \n",
-      "\n",
-      "                                                    4    5          6  \\\n",
-      "0                                      Name of Primer  DNA  OrderCode   \n",
-      "1   PL-022515_int_r_26_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "2   PL-022515_int_r_26_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "3   PL-022515_int_r_26_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "4   PL-022515_int_r_26_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "5   PL-022515_int_r_26_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "6   PL-022515_int_r_21_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "7   PL-022515_int_r_21_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "8   PL-022515_int_r_21_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "9   PL-022515_int_r_21_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "10  PL-022515_int_r_21_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "11  PL-022515_int_r_21_Plate120319192321_Sequencin...  NaN       DP-X   \n",
-      "12  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "13  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "14  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "15  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "16  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "17  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "18  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "19  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "20  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "21  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "22  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "23  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "24  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "25  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "26  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "27  PL-022396_int_r_8_Plate111519200130_Sequencing_E4  NaN       DP-X   \n",
-      "\n",
-      "           7   8    9  \n",
-      "0   PCR size NaN   사유  \n",
-      "1         -1 NaN  NaN  \n",
-      "2         -1 NaN  NaN  \n",
-      "3         -1 NaN  NaN  \n",
-      "4         -1 NaN  NaN  \n",
-      "5         -1 NaN  NaN  \n",
-      "6         -1 NaN  NaN  \n",
-      "7         -1 NaN  NaN  \n",
-      "8         -1 NaN  NaN  \n",
-      "9         -1 NaN  NaN  \n",
-      "10        -1 NaN  NaN  \n",
-      "11        -1 NaN  NaN  \n",
-      "12        -1 NaN  NaN  \n",
-      "13        -1 NaN  NaN  \n",
-      "14        -1 NaN  NaN  \n",
-      "15        -1 NaN  NaN  \n",
-      "16        -1 NaN  NaN  \n",
-      "17        -1 NaN  NaN  \n",
-      "18        -1 NaN  NaN  \n",
-      "19        -1 NaN  NaN  \n",
-      "20        -1 NaN  NaN  \n",
-      "21        -1 NaN  NaN  \n",
-      "22        -1 NaN  NaN  \n",
-      "23        -1 NaN  NaN  \n",
-      "24        -1 NaN  NaN  \n",
-      "25        -1 NaN  NaN  \n",
-      "26        -1 NaN  NaN  \n",
-      "27        -1 NaN  NaN  ]\n",
-      "--- 51.856853008270264 seconds ---\n",
-      "getting Checkbox finished!\n",
-      "--- 52.23344612121582 seconds ---\n",
-      "list_univ: [array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64), array([], dtype=int64)]\n",
-      "list_well_num: ['\\\\(A1\\\\)', '\\\\(B1\\\\)', '\\\\(C1\\\\)', '\\\\(D1\\\\)', '\\\\(E1\\\\)', '\\\\(F1\\\\)', '\\\\(G1\\\\)', '\\\\(H1\\\\)', '\\\\(A2\\\\)', '\\\\(B2\\\\)', '\\\\(C2\\\\)', '\\\\(D2\\\\)', '\\\\(E2\\\\)', '\\\\(F2\\\\)', '\\\\(G2\\\\)', '\\\\(H2\\\\)', '\\\\(A3\\\\)', '\\\\(B3\\\\)', '\\\\(C3\\\\)', '\\\\(D3\\\\)', '\\\\(E3\\\\)', '\\\\(F3\\\\)', '\\\\(G3\\\\)', '\\\\(H3\\\\)', '\\\\(A4\\\\)', '\\\\(B4\\\\)', '\\\\(C4\\\\)', '\\\\(D4\\\\)', '\\\\(E4\\\\)', '\\\\(F4\\\\)', '\\\\(G4\\\\)', '\\\\(H4\\\\)', '\\\\(A5\\\\)', '\\\\(B5\\\\)', '\\\\(C5\\\\)', '\\\\(D5\\\\)', '\\\\(E5\\\\)', '\\\\(F5\\\\)', '\\\\(G5\\\\)', '\\\\(H5\\\\)', '\\\\(A6\\\\)', '\\\\(B6\\\\)', '\\\\(C6\\\\)', '\\\\(D6\\\\)', '\\\\(E6\\\\)', '\\\\(F6\\\\)', '\\\\(G6\\\\)', '\\\\(H6\\\\)', '\\\\(A7\\\\)', '\\\\(B7\\\\)', '\\\\(C7\\\\)', '\\\\(D7\\\\)', '\\\\(E7\\\\)', '\\\\(F7\\\\)', '\\\\(G7\\\\)', '\\\\(H7\\\\)', '\\\\(A8\\\\)', '\\\\(B8\\\\)', '\\\\(C8\\\\)', '\\\\(D8\\\\)', '\\\\(E8\\\\)', '\\\\(F8\\\\)', '\\\\(G8\\\\)', '\\\\(H8\\\\)', '\\\\(A9\\\\)', '\\\\(B9\\\\)', '\\\\(C9\\\\)', '\\\\(D9\\\\)', '\\\\(E9\\\\)', '\\\\(F9\\\\)', '\\\\(G9\\\\)', '\\\\(H9\\\\)', '\\\\(A10\\\\)', '\\\\(B10\\\\)', '\\\\(C10\\\\)', '\\\\(D10\\\\)', '\\\\(E10\\\\)', '\\\\(F10\\\\)', '\\\\(G10\\\\)', '\\\\(H10\\\\)', '\\\\(A11\\\\)', '\\\\(B11\\\\)', '\\\\(C11\\\\)', '\\\\(D11\\\\)', '\\\\(E11\\\\)', '\\\\(F11\\\\)', '\\\\(G11\\\\)', '\\\\(H11\\\\)', '\\\\(A12\\\\)', '\\\\(B12\\\\)', '\\\\(C12\\\\)', '\\\\(D12\\\\)', '\\\\(E12\\\\)', '\\\\(F12\\\\)', '\\\\(G12\\\\)', '\\\\(H12\\\\)']\n",
-      "general_primers: [ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24\n",
-      " 25 26 27]\n",
-      "loop start, cnt: 1\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "[]\n",
-      "univ_primers checked: False\n",
-      "\\(A1\\)[]\n",
-      "\\(B1\\)[]\n",
-      "\\(C1\\)[]\n",
-      "\\(D1\\)[]\n",
-      "\\(E1\\)[]\n",
-      "\\(F1\\)[1]\n",
-      "\\(G1\\)[2]\n",
-      "\\(H1\\)[3]\n",
-      "\\(A2\\)[4]\n",
-      "\\(B2\\)[5]\n",
-      "\\(C2\\)[6]\n",
-      "\\(D2\\)[7]\n",
-      "\\(E2\\)[8]\n",
-      "\\(F2\\)[9]\n",
-      "\\(G2\\)[10]\n",
-      "\\(H2\\)[11]\n",
-      "\\(A3\\)[]\n",
-      "\\(B3\\)[]\n",
-      "\\(C3\\)[]\n",
-      "\\(D3\\)[]\n",
-      "\\(E3\\)[]\n",
-      "\\(F3\\)[]\n",
-      "\\(G3\\)[]\n",
-      "\\(H3\\)[]\n",
-      "\\(A4\\)[]\n",
-      "\\(B4\\)[]\n",
-      "\\(C4\\)[]\n",
-      "\\(D4\\)[]\n",
-      "\\(E4\\)[]\n",
-      "\\(F4\\)[]\n",
-      "\\(G4\\)[]\n",
-      "\\(H4\\)[]\n",
-      "\\(A5\\)[12]\n",
-      "\\(B5\\)[13]\n",
-      "\\(C5\\)[14]\n",
-      "\\(D5\\)[15]\n",
-      "\\(E5\\)[16]\n",
-      "\\(F5\\)[17]\n",
-      "\\(G5\\)[18]\n",
-      "\\(H5\\)[19]\n",
-      "\\(A6\\)[20]\n",
-      "\\(B6\\)[21]\n",
-      "\\(C6\\)[22]\n",
-      "\\(D6\\)[23]\n",
-      "\\(E6\\)[24]\n",
-      "\\(F6\\)[25]\n",
-      "\\(G6\\)[26]\n",
-      "\\(H6\\)[27]\n",
-      "\\(A7\\)[]\n",
-      "\\(B7\\)[]\n",
-      "\\(C7\\)[]\n",
-      "\\(D7\\)[]\n",
-      "\\(E7\\)[]\n",
-      "\\(F7\\)[]\n",
-      "\\(G7\\)[]\n",
-      "\\(H7\\)[]\n",
-      "\\(A8\\)[]\n",
-      "\\(B8\\)[]\n",
-      "\\(C8\\)[]\n",
-      "\\(D8\\)[]\n",
-      "\\(E8\\)[]\n",
-      "\\(F8\\)[]\n",
-      "\\(G8\\)[]\n",
-      "\\(H8\\)[]\n",
-      "\\(A9\\)[]\n",
-      "\\(B9\\)[]\n",
-      "\\(C9\\)[]\n",
-      "\\(D9\\)[]\n",
-      "\\(E9\\)[]\n",
-      "\\(F9\\)[]\n",
-      "\\(G9\\)[]\n",
-      "\\(H9\\)[]\n",
-      "\\(A10\\)[]\n",
-      "\\(B10\\)[]\n",
-      "\\(C10\\)[]\n",
-      "\\(D10\\)[]\n",
-      "\\(E10\\)[]\n",
-      "\\(F10\\)[]\n",
-      "\\(G10\\)[]\n",
-      "\\(H10\\)[]\n",
-      "\\(A11\\)[]\n",
-      "\\(B11\\)[]\n",
-      "\\(C11\\)[]\n",
-      "\\(D11\\)[]\n",
-      "\\(E11\\)[]\n",
-      "\\(F11\\)[]\n",
-      "\\(G11\\)[]\n",
-      "\\(H11\\)[]\n",
-      "\\(A12\\)[]\n",
-      "\\(B12\\)[]\n",
-      "\\(C12\\)[]\n",
-      "\\(D12\\)[]\n",
-      "\\(E12\\)[]\n",
-      "\\(F12\\)[]\n",
-      "\\(G12\\)[]\n",
-      "\\(H12\\)[]\n",
-      "general_primers checked: False\n"
-     ]
-    }
-   ],
-   "source": [
-    "\n",
-    "\n",
-    "browser.switch_to_default_content()\n",
-    "browser.switch_to_frame('main')\n",
-    "\n",
-    "# Web scraping - read the table.\n",
-    "soup = BeautifulSoup(browser.page_source)\n",
-    "table = soup.find_all('table')[4]\n",
-    "list_df = pd.read_html(str(table))\n",
-    "df = list_df[0]\n",
-    "df = df.dropna(thresh=4) #Remove missing values.\n",
-    "print('Web scraping finished!')\n",
-    "print(list_df)\n",
-    "print(\"--- %s seconds ---\" % (time.time() - start_time))\n",
-    "\n",
-    "# get all checkboxes in the webpage\n",
-    "len_table = len(df)\n",
-    "list_checkboxes = []\n",
-    "list_checkboxes.append(browser.find_element_by_xpath('/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[9]/input')) # for first row\n",
-    "for i in range(len_table-2):\n",
-    "    list_checkboxes.append(browser.find_element_by_xpath('/html/body/table/tbody/tr[3]/td/table/tbody/tr[%d]/td[7]/input'%(i+3)))\n",
-    "#get gugan checkbox\n",
-    "gugan_checkbox = browser.find_element_by_xpath('//*[@id=\"gugan_menu\"]/table/tbody/tr[1]/td[2]/input')  \n",
-    "print('getting Checkbox finished!')\n",
-    "print(\"--- %s seconds ---\" % (time.time() - start_time))\n",
-    "## setting up univeral primers ...\n",
-    "arr_index_EB3 = df.loc[df[4] == 'EB3', 0].to_numpy().astype(int)\n",
-    "arr_index_IntFw = df.loc[df[4] == 'IntFw', 0].to_numpy().astype(int)\n",
-    "arr_index_KanFw = df.loc[df[4] == 'KanFw', 0].to_numpy().astype(int)\n",
-    "arr_index_KanRv = df.loc[df[4] == 'KanRv', 0].to_numpy().astype(int)\n",
-    "arr_index_KanRv2 = df.loc[df[4] == 'KanRv2', 0].to_numpy().astype(int)\n",
-    "arr_index_IntFw2 = df.loc[df[4] == 'IntFw2', 0].to_numpy().astype(int)\n",
-    "arr_index_Kan_Del_Fw = df.loc[df[4] == 'Kan_Del_Fw', 0].to_numpy().astype(int)\n",
-    "arr_index_KanFw2 = df.loc[df[4] == 'KanFw2', 0].to_numpy().astype(int)\n",
-    "arr_index_EPORv = df.loc[df[4] == 'EPORv', 0].to_numpy().astype(int)\n",
-    "arr_index_EPOFw = df.loc[df[4] == 'EPOFw', 0].to_numpy().astype(int)\n",
-    "\n",
-    "\n",
-    "list_univ = [arr_index_EB3, arr_index_EPOFw, arr_index_EPORv, \n",
-    "            arr_index_IntFw, arr_index_IntFw2, arr_index_Kan_Del_Fw,\n",
-    "            arr_index_KanFw, arr_index_KanFw2, arr_index_KanRv,arr_index_KanRv2]\n",
-    "\n",
-    "# setting up General primers\n",
-    "\n",
-    "list_alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']\n",
-    "list_number = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']\n",
-    "\n",
-    "list_well_num = []\n",
-    "for number in list_number:\n",
-    "    for alphabet in list_alphabet:\n",
-    "        list_well_num.append(r'\\(' + alphabet + number + r'\\)')\n",
-    "\n",
-    "        \n",
-    "general_primers = df.loc[df[4].str.contains('Sequencing'), 0].to_numpy().astype(int)\n",
-    "\n",
-    "print('list_univ: ' + str(list_univ))\n",
-    "print('list_well_num: ' + str(list_well_num))\n",
-    "print('general_primers: ' + str(general_primers))\n",
-    "def check_univ_primers(arr_index):\n",
-    "    # click elements by 48....\\\n",
-    "    bln_pass = False\n",
-    "    quotient_48 = int(len(arr_index)/48)\n",
-    "    quotient_32 = int(len(arr_index)/32)\n",
-    "    quotient_16 = int(len(arr_index)/16)\n",
-    "    quotient_8 = int(len(arr_index)/8)\n",
-    "    print(arr_index)\n",
-    "    if quotient_48 > 0:\n",
-    "        list_checkboxes[arr_index[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[arr_index[(quotient_48-1)*48+47]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        bln_pass = True       \n",
-    "        print('48 checked')\n",
-    "        \n",
-    "    elif (quotient_32 > 0):\n",
-    "    # at this point, there is no arr_index which has elements more than 32\n",
-    "        list_checkboxes[arr_index[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[arr_index[(quotient_32-1)*32+31]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        bln_pass = True   \n",
-    "        print('32 checked')\n",
-    "\n",
-    "    elif (quotient_16 > 0):\n",
-    "    # at this point, there is no arr_index which has elements more than 16\n",
-    "        list_checkboxes[arr_index[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[arr_index[(quotient_16-1)*16+15]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        bln_pass = True   \n",
-    "        print('16 checked')\n",
-    "\n",
-    "    elif (quotient_8 > 0):\n",
-    "     # at this point, there is no arr_index which has elements more than 8\n",
-    "        list_checkboxes[arr_index[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[arr_index[(quotient_8-1)*8+7]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        bln_pass = True   \n",
-    "        print('8 checked')\n",
-    "        \n",
-    "    return bln_pass\n",
-    "\n",
-    "def check_general_primers(well_num):\n",
-    "    _indicies = df.loc[\n",
-    "                    df[3].str.contains(well_num), 0\n",
-    "                ].to_numpy().astype(int)\n",
-    "    indicies = [_index for _index in _indicies if (_index in general_primers)]\n",
-    "    print(well_num + str(indicies))\n",
-    "\n",
-    "    bln_pass = False\n",
-    "    # click elements by 8...\n",
-    "    quotient_8 = int(len(indicies)/8)\n",
-    "    if len(indicies) >= 8:\n",
-    "        list_checkboxes[indicies[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[indicies[7]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        print('check 8')\n",
-    "        bln_pass = True\n",
-    "\n",
-    "    elif int(len(indicies)/4) > 0:\n",
-    "        list_checkboxes[indicies[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[indicies[3]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        print('check 4')\n",
-    "        bln_pass = True\n",
-    "\n",
-    "    elif int(len(indicies)/2) > 0:\n",
-    "        list_checkboxes[indicies[0]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        list_checkboxes[indicies[1]-1].click()\n",
-    "        gugan_checkbox.click()\n",
-    "        print('check 2')\n",
-    "        bln_pass = True\n",
-    "        \n",
-    "    return bln_pass\n",
-    "\n",
-    "        \n",
-    "bln_sample_to_send = True\n",
-    "\n",
-    "cnt = 0\n",
-    "max_loop_count = 1\n",
-    "while(bln_sample_to_send and cnt < max_loop_count):\n",
-    "    cnt = cnt + 1\n",
-    "    print('loop start, cnt: %d'%(cnt))\n",
-    "    \n",
-    "    \n",
-    "    bln_univ_pass = False\n",
-    "    # check for univ primers\n",
-    "    for arr_index in list_univ:\n",
-    "        _bln = check_univ_primers(arr_index)\n",
-    "        bln_univ_pass = _bln or bln_univ_pass\n",
-    "    print('univ_primers checked: ' + str(bln_univ_pass))\n",
-    "    \n",
-    "    # check for general primers\n",
-    "    bln_general_pass = False\n",
-    "    for well_num in list_well_num:\n",
-    "        _bln = check_general_primers(well_num)\n",
-    "        bln_general_pass = bln_general_pass or _bln\n",
-    "    print('general_primers checked: ' + str(bln_general_pass))\n",
-    "    \n",
-    "    bln_pass = bln_univ_pass or bln_general_pass\n",
-    "        \n",
-    "    if (bln_pass == False):  \n",
-    "        bln_sample_to_send = False\n",
-    "    else:\n",
-    "        print('Click SEND!!!!!!!!!!!!!')\n",
-    "        qty_btn = browser.find_element_by_xpath('/html/body/table/tbody/tr[6]/td/p/img[3]')\n",
-    "        qty_btn.click()\n",
-    "        print('\\n')\n",
-    "        pass\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.7.3"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 2
-}
+Initialization
+
+
+#imports
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from bs4 import BeautifulSoup
+import urllib.request
+import re
+import os
+import numpy as np
+import pandas as pd
+import time
+from itertools import zip_longest
+from selenium.common.exceptions import ElementClickInterceptedException
+import time
+
+# panda configuration
+pd.set_option('display.max_rows', 1000) # max number of rows to display
+
+start_time = time.time()
+# First start the chromedriver
+
+path_to_chromedriver ='/Users/yeryoungkim/Desktop/chromedriver' 
+
+browser = webdriver.Chrome(executable_path = path_to_chromedriver)
+# Set the url
+url = 'http://macrogenusa.com/admin/'
+browser.get(url)
+
+
+# find the 'user_id' element by name
+browser.find_element_by_name('user_id')
+browser.find_element_by_name('user_id').clear() # Make sure that the form is empty
+browser.find_element_by_name('user_id').send_keys('yrkim') # writing ID 
+browser.find_element_by_name('passwd') # find the 'passwd' element by name
+browser.find_element_by_name('passwd').clear()# Make sure that the form is empty
+browser.find_element_by_name('passwd').send_keys('macrogen0605')# writing password
+browser.find_element_by_xpath('/html/body/div/div/form/button').click()# Searching the login button's xpath and click it.
+
+# switch to frame in menu
+browser.switch_to_frame('menu')
+browser.find_element_by_xpath('//*[@id="leftmenu"]/ul/li[4]/ul/li[15]/a').click()# click the quantify button
+
+
+
+Web scraping
+
+browser.switch_to_default_content()
+browser.switch_to_frame('main')
+
+# Web scraping - read the table.
+soup = BeautifulSoup(browser.page_source)
+table = soup.find_all('table')[4]
+list_df = pd.read_html(str(table))
+df = list_df[0]
+df = df.dropna(thresh=4) #Remove missing values.
+print('Web scraping finished!')
+print(list_df)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+# get all checkboxes in the webpage
+len_table = len(df)
+list_checkboxes = []
+list_checkboxes.append(browser.find_element_by_xpath('/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[9]/input')) # for first row
+for i in range(len_table-2):
+    list_checkboxes.append(browser.find_element_by_xpath('/html/body/table/tbody/tr[3]/td/table/tbody/tr[%d]/td[7]/input'%(i+3)))
+#get gugan checkbox
+gugan_checkbox = browser.find_element_by_xpath('//*[@id="gugan_menu"]/table/tbody/tr[1]/td[2]/input')  
+print('getting Checkbox finished!')
+print("--- %s seconds ---" % (time.time() - start_time))
+## setting up univeral primers ...
+arr_index_EB3 = df.loc[df[4] == 'EB3', 0].to_numpy().astype(int)
+arr_index_IntFw = df.loc[df[4] == 'IntFw', 0].to_numpy().astype(int)
+arr_index_KanFw = df.loc[df[4] == 'KanFw', 0].to_numpy().astype(int)
+arr_index_KanRv = df.loc[df[4] == 'KanRv', 0].to_numpy().astype(int)
+arr_index_KanRv2 = df.loc[df[4] == 'KanRv2', 0].to_numpy().astype(int)
+arr_index_IntFw2 = df.loc[df[4] == 'IntFw2', 0].to_numpy().astype(int)
+arr_index_Kan_Del_Fw = df.loc[df[4] == 'Kan_Del_Fw', 0].to_numpy().astype(int)
+arr_index_KanFw2 = df.loc[df[4] == 'KanFw2', 0].to_numpy().astype(int)
+arr_index_EPORv = df.loc[df[4] == 'EPORv', 0].to_numpy().astype(int)
+arr_index_EPOFw = df.loc[df[4] == 'EPOFw', 0].to_numpy().astype(int)
+
+
+list_univ = [arr_index_EB3, arr_index_EPOFw, arr_index_EPORv, 
+            arr_index_IntFw, arr_index_IntFw2, arr_index_Kan_Del_Fw,
+            arr_index_KanFw, arr_index_KanFw2, arr_index_KanRv,arr_index_KanRv2]
+
+# setting up General primers
+
+list_alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+list_number = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+
+list_well_num = []
+for number in list_number:
+    for alphabet in list_alphabet:
+        list_well_num.append(r'\(' + alphabet + number + r'\)')
+
+        
+general_primers = df.loc[df[4].str.contains('Sequencing'), 0].to_numpy().astype(int)
+
+print('list_univ: ' + str(list_univ))
+print('list_well_num: ' + str(list_well_num))
+print('general_primers: ' + str(general_primers))
+def check_univ_primers(arr_index):
+    # click elements by 48....\
+    bln_pass = False
+    quotient_48 = int(len(arr_index)/48)
+    quotient_32 = int(len(arr_index)/32)
+    quotient_16 = int(len(arr_index)/16)
+    quotient_8 = int(len(arr_index)/8)
+    print(arr_index)
+    if quotient_48 > 0:
+        list_checkboxes[arr_index[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[arr_index[(quotient_48-1)*48+47]-1].click()
+        gugan_checkbox.click()
+        bln_pass = True       
+        print('48 checked')
+        
+    elif (quotient_32 > 0):
+    # at this point, there is no arr_index which has elements more than 32
+        list_checkboxes[arr_index[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[arr_index[(quotient_32-1)*32+31]-1].click()
+        gugan_checkbox.click()
+        bln_pass = True   
+        print('32 checked')
+
+    elif (quotient_16 > 0):
+    # at this point, there is no arr_index which has elements more than 16
+        list_checkboxes[arr_index[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[arr_index[(quotient_16-1)*16+15]-1].click()
+        gugan_checkbox.click()
+        bln_pass = True   
+        print('16 checked')
+
+    elif (quotient_8 > 0):
+     # at this point, there is no arr_index which has elements more than 8
+        list_checkboxes[arr_index[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[arr_index[(quotient_8-1)*8+7]-1].click()
+        gugan_checkbox.click()
+        bln_pass = True   
+        print('8 checked')
+        
+    return bln_pass
+
+def check_general_primers(well_num):
+    _indicies = df.loc[
+                    df[3].str.contains(well_num), 0
+                ].to_numpy().astype(int)
+    indicies = [_index for _index in _indicies if (_index in general_primers)]
+    print(well_num + str(indicies))
+
+    bln_pass = False
+    # click elements by 8...
+    quotient_8 = int(len(indicies)/8)
+    if len(indicies) >= 8:
+        list_checkboxes[indicies[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[indicies[7]-1].click()
+        gugan_checkbox.click()
+        print('check 8')
+        bln_pass = True
+
+    elif int(len(indicies)/4) > 0:
+        list_checkboxes[indicies[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[indicies[3]-1].click()
+        gugan_checkbox.click()
+        print('check 4')
+        bln_pass = True
+
+    elif int(len(indicies)/2) > 0:
+        list_checkboxes[indicies[0]-1].click()
+        gugan_checkbox.click()
+        list_checkboxes[indicies[1]-1].click()
+        gugan_checkbox.click()
+        print('check 2')
+        bln_pass = True
+        
+    return bln_pass
+
+        
+bln_sample_to_send = True
+
+cnt = 0
+max_loop_count = 1
+while(bln_sample_to_send and cnt < max_loop_count):
+    cnt = cnt + 1
+    print('loop start, cnt: %d'%(cnt))
+    
+    
+    bln_univ_pass = False
+    # check for univ primers
+    for arr_index in list_univ:
+        _bln = check_univ_primers(arr_index)
+        bln_univ_pass = _bln or bln_univ_pass
+    print('univ_primers checked: ' + str(bln_univ_pass))
+    
+    # check for general primers
+    bln_general_pass = False
+    for well_num in list_well_num:
+        _bln = check_general_primers(well_num)
+        bln_general_pass = bln_general_pass or _bln
+    print('general_primers checked: ' + str(bln_general_pass))
+    
+    bln_pass = bln_univ_pass or bln_general_pass
+        
+    if (bln_pass == False):  
+        bln_sample_to_send = False
+    else:
+        print('Click SEND!!!!!!!!!!!!!')
+        qty_btn = browser.find_element_by_xpath('/html/body/table/tbody/tr[6]/td/p/img[3]')
+        qty_btn.click()
+        print('\n')
+        pass
+
+
