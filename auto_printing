@@ -1,0 +1,93 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import ElementClickInterceptedException
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+import urllib.request
+import re
+import os
+import numpy as np
+import pandas as pd
+import time
+
+
+# panda configuration
+pd.set_option('display.max_rows', 1000) # max number of rows to display
+
+start_time = time.time()
+# First start the chromedriver
+
+path_to_chromedriver ='C:\\Users\\Ye Ryoung Kim\\Desktop\\chromedriver_win32\\chromedriver' 
+
+browser = webdriver.Chrome(executable_path = path_to_chromedriver) # # service=Service(ChromeDriverManager().install())
+# Set the url
+url = 'https://lims3.psomagen.com/com/user/loginForm.do'
+browser.get(url)
+# read sheets from the table.
+rxn_sheet_table_df = pd.read_html(browser.find_element(by=By.XPATH,value ="/html/body/div[2]/div[2]/div/form/div[2]/div/div/div/div/div/table/tbody/tr[3]").get_attribute('outerHTML'))
+rxn_plate_dept = rxn_sheet_table_df[0][3]
+rxn_plate_id_col = rxn_sheet_table_df[0][5] # Reading reaction sheets id column.
+
+# Check the department that is match with.
+
+def check_dept(table):
+    list_dept = []  # Get the row number of designated department.
+    for i in range(len(rxn_plate_dept)):
+        if rxn_plate_dept[i] == "Maryland":
+            list_dept.append(i)
+    list_dept.reverse()
+    return list_dept
+
+
+# Click the sheets that need to print out.
+
+def click_rxn_sheet(pos):
+    click_sheet = browser.find_element(by=By.XPATH, value ="/html/body/div[2]/div[2]/div/form/div[2]/div/div/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[4]/b/u"%(pos)).click()
+    return click_sheet
+
+positions = check_dept(rxn_plate_dept)
+
+print(positions)
+
+for p in positions:
+    print(p)
+    print_sheets = click_rxn_sheet(p)
+    try:
+        wait = WebDriverWait(browser, 10)
+        element = wait.until(EC.element_to_be_clickable((By.ID, 'btnSheetPrint')))   
+        print("I'm here")
+    finally:
+        element.click()
+    wait = WebDriverWait(browser, 10)
+    disappear = wait.until_not(EC.presence_of_element_located((By.CLASS_NAME, "content fixed-none rxn-sheet-print print-page")))
+    print("I'm here")
+    positions.remove(p)
+    print(positions)
+
+    click_ces= browser.find_element(by=By.XPATH, value = "/html/body/div[2]/aside/section/div[1]/ul/li[2]/a")
+    click_ces.click()
+        
+    click_order_management = browser.find_element(by=By.XPATH, value = "/html/body/div[2]/aside/section/div[2]/div[2]/ul/li[3]/a")
+    click_order_management.click()
+    
+    click_rxn_sheet = browser.find_element(by=By.XPATH, value = "/html/body/div[2]/aside/section/div[2]/div[2]/ul/li[3]/ul/li[14]/a")
+    click_rxn_sheet.click()
+    
+    click_seq_dept = browser.find_element(by=By.XPATH, value = "/html/body/div[2]/div[2]/div/form/div[1]/div[2]/ul/li[2]/div/ul/li[1]/label")
+    click_seq_dept.click()
+    
+    click_status = browser.find_element(by=By.XPATH, value = "/html/body/div[2]/div[2]/div/form/div[1]/div[2]/ul/li[3]/div/select")
+    click_status.click()
+    
+    
+    click_complete = browser.find_element(by=By.XPATH, value = "/html/body/div[2]/div[2]/div/form/div[1]/div[2]/ul/li[3]/div/select/option[4]")
+    click_complete.click()
+    
+    
+    click_search = browser.find_element(by=By.XPATH, value = "/html/body/div[2]/div[2]/div/form/div[1]/div[2]/div/div/button")
+    click_search.click() 
+    
+
