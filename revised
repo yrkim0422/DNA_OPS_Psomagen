@@ -1,0 +1,44 @@
+def generate_x_path_num(arr_index):
+
+    quotient_96 = int(len(arr_index)/96)
+    print("quotient_96:{}".format(quotient_96))
+    quotient_48 = int(len(arr_index)/48)
+    print("quotient_48:{}".format(quotient_48))
+    quotient_32 = int(len(arr_index)/32)
+    print("quotient_32:{}".format(quotient_32))
+    quotient_16 = int(len(arr_index)/16)
+    print("quotient_16:{}".format(quotient_16))
+    quotient_12 = int(len(arr_index)/12)
+    print("quotient_12:{}".format(quotient_12))
+    quotient_8 = int(len(arr_index)/8)
+    print("quotient_8:{}".format(quotient_8))
+
+    if quotient_96 > 0:
+        num = arr_index[0]+96
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+    elif quotient_48 > 0:
+        num = arr_index[0]+48
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+    elif quotient_32 > 0:
+        num = arr_index[0]+32
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+    elif quotient_16 > 0:
+        num = arr_index[0]+16
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+    elif quotient_12 > 0:
+        num = arr_index[0]+12
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+    elif quotient_8 > 0:
+        num = arr_index[0]+8
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+    else:
+        print("no more dividend")
+        
+
+    return first_ele_x_path,last_ele_x_path,num
