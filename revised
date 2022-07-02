@@ -1,4 +1,5 @@
 def generate_x_path_num(arr_index):
+    bln_pass = False
 
     quotient_96 = int(len(arr_index)/96)
     print("quotient_96:{}".format(quotient_96))
@@ -15,30 +16,61 @@ def generate_x_path_num(arr_index):
 
     if quotient_96 > 0:
         num = arr_index[0]+96
-        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        print("num:{}".format(num))
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(arr_index[0]+1))
         last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+
     elif quotient_48 > 0:
         num = arr_index[0]+48
-        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
-        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(arr_index[0]+1))
+        last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))        
+        
+        
     elif quotient_32 > 0:
         num = arr_index[0]+32
-        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(arr_index[0]+1))
         last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+   
     elif quotient_16 > 0:
         num = arr_index[0]+16
-        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(arr_index[0]+1))
         last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+
+        
     elif quotient_12 > 0:
         num = arr_index[0]+12
-        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(arr_index[0]+1))
         last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+   
+        
     elif quotient_8 > 0:
         num = arr_index[0]+8
-        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num-1))
+        first_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(arr_index[0]+1))
         last_ele_x_path = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[%d]/td[12]'%(num))
+
     else:
         print("no more dividend")
         
 
-    return first_ele_x_path,last_ele_x_path,num
+    return first_ele_x_path,last_ele_x_path
+    
+    
+    
+    
+    
+    from selenium.webdriver.common.action_chains import ActionChains
+
+cnt =1
+first_row = browser.find_element(by=By.XPATH, value ='/html/body/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/div/div/table/tbody/tr[3]/td/div/div[1]/table/tbody/tr[2]/td[15]')
+first_row.click()
+for arr_index in list_univ:
+    a,b = generate_x_path_num(arr_index)
+    control_c = ActionChains(browser).key_down(Keys.CONTROL).send_keys('c').key_up(Keys.CONTROL).perform()
+    # drag until the target.
+    drag_context = ActionChains(browser).drag_and_drop(a, b).perform()
+    # Paste the copyed one from the first row
+    control_c = ActionChains(browser).key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL).perform()
+    cnt +=1
+    wait = WebDriverWait(browser, 15)
+    print(cnt)
+    
